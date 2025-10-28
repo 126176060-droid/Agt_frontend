@@ -8,7 +8,7 @@ function SalesList() {
 
   const handleGet = async () => {
     try {
-      const resp = await axios.get("http://localhost:3000/sales");
+      const resp = await axios.get("https://assignment-backend-1-xe8n.onrender.com/sales");
       setData(resp.data);
     } catch (e) {
       setMsg(e.message);

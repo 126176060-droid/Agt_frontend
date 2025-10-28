@@ -23,7 +23,7 @@ function UpdateSale() {
       if (sale.pricePerLiter !== '') body.pricePerLiter = parseFloat(sale.pricePerLiter);
       if (sale.date) body.date = sale.date;
 
-      const resp = await axios.put(`http://localhost:3000/sales/${sale.id}`, body);
+      const resp = await axios.put(`https://assignment-backend-1-xe8n.onrender.com/sales/${sale.id}`, body);
       setMsg(resp.data.msg);
     } catch (e) {
       setMsg(e.response?.data?.msg || e.message);

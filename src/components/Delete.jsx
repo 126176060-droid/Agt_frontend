@@ -8,7 +8,7 @@ function DeleteSale() {
 
   const handleDelete = async () => {
     try {
-      const resp = await axios.delete(`http://localhost:3000/sales/${saleId}`);
+      const resp = await axios.delete(`https://assignment-backend-1-xe8n.onrender.com/sales/${saleId}`);
       setMsg(resp.data.msg);
     } catch (e) {
       setMsg(e.response?.data?.msg || e.message);

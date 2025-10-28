@@ -15,7 +15,7 @@ function AddSale() {
 
   const handlePost = async () => {
     try {
-      const resp = await axios.post("http://localhost:3000/sales", sale);
+      const resp = await axios.post("https://assignment-backend-1-xe8n.onrender.com/sales", sale);
       setMsg(resp.data.msg);
     } catch (e) {
       setMsg(e.response?.data?.msg || e.message);
