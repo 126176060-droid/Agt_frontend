@@ -1,23 +1,18 @@
-// components/Delete.jsx
+// src/components/DeleteSale.jsx
 import React, { useState } from "react";
 import axios from "axios";
 
-function Delete() {
-  const [id, setId] = useState("");
+function DeleteSale() {
   const [msg, setMsg] = useState(null);
+  const [saleId, setSaleId] = useState(0);
 
   const handleDelete = async () => {
-    if (!id) {
-      setMsg("Please provide Sale ID to delete");
-      return;
-    }
     try {
-      const resp = await axios.delete(`http://localhost:3000/sales/${id}`);
-      setMsg(resp.data.msg || "Sale deleted");
-      setId("");
+      const resp = await axios.delete(`http://localhost:3000/sales/${saleId}`);
+      setMsg(resp.data.msg);
     } catch (e) {
-      console.error(e);
       setMsg(e.response?.data?.msg || e.message);
+      console.log(e);
     }
   };
 
@@ -26,15 +21,14 @@ function Delete() {
       <h1>Delete Sale</h1>
       <input
         type="number"
-        value={id}
-        onChange={(e) => setId(e.target.value)}
+        value={saleId}
+        onChange={(e) => setSaleId(parseInt(e.target.value) || 0)}
         placeholder="Sale ID"
       />
-      <br />
       <button onClick={handleDelete}>Delete</button>
       {msg && <p>{msg}</p>}
     </>
   );
 }
 
-export default Delete;
+export default DeleteSale;

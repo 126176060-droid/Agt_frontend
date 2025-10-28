@@ -1,35 +1,33 @@
-// components/Update.jsx
+// src/components/UpdateSale.jsx
 import React, { useState } from "react";
 import axios from "axios";
 
-function Update() {
-  const [sale, setSale] = useState({
-    id: "",
-    product: "",
-    volume: "",
-    pricePerLiter: "",
-    customer: "",
-  });
+function UpdateSale() {
   const [msg, setMsg] = useState(null);
+  const [sale, setSale] = useState({
+    id: 0,
+    customer: '',
+    oilType: '',
+    liters: '',
+    pricePerLiter: '',
+    date: ''
+  });
 
   const handlePut = async () => {
-    if (!sale.id) {
-      setMsg("Please provide Sale ID to update");
-      return;
-    }
-    // prepare payload with only provided fields
-    const payload = {};
-    if (sale.product) payload.product = sale.product;
-    if (sale.volume) payload.volume = parseFloat(sale.volume);
-    if (sale.pricePerLiter) payload.pricePerLiter = parseFloat(sale.pricePerLiter);
-    if (sale.customer) payload.customer = sale.customer;
-
     try {
-      const resp = await axios.put(`http://localhost:3000/sales/${sale.id}`, payload);
-      setMsg(resp.data.msg || "Sale updated");
+      // only send the fields the user filled in (except id)
+      const body = {};
+      if (sale.customer) body.customer = sale.customer;
+      if (sale.oilType) body.oilType = sale.oilType;
+      if (sale.liters !== '') body.liters = parseFloat(sale.liters);
+      if (sale.pricePerLiter !== '') body.pricePerLiter = parseFloat(sale.pricePerLiter);
+      if (sale.date) body.date = sale.date;
+
+      const resp = await axios.put(`http://localhost:3000/sales/${sale.id}`, body);
+      setMsg(resp.data.msg);
     } catch (e) {
-      console.error(e);
       setMsg(e.response?.data?.msg || e.message);
+      console.log(e);
     }
   };
 
@@ -40,45 +38,43 @@ function Update() {
       <input
         type="number"
         value={sale.id}
-        onChange={(e) => setSale({ ...sale, id: e.target.value })}
+        onChange={(e) => setSale({ ...sale, id: parseInt(e.target.value) || 0 })}
         placeholder="Sale ID"
       />
-      <br />
-      <input
-        type="text"
-        value={sale.product}
-        onChange={(e) => setSale({ ...sale, product: e.target.value })}
-        placeholder="Product (leave blank to keep)"
-      />
-      <br />
-      <input
-        type="number"
-        step="0.01"
-        value={sale.volume}
-        onChange={(e) => setSale({ ...sale, volume: e.target.value })}
-        placeholder="Volume (liters)"
-      />
-      <br />
-      <input
-        type="number"
-        step="0.01"
-        value={sale.pricePerLiter}
-        onChange={(e) => setSale({ ...sale, pricePerLiter: e.target.value })}
-        placeholder="Price per liter"
-      />
-      <br />
       <input
         type="text"
         value={sale.customer}
         onChange={(e) => setSale({ ...sale, customer: e.target.value })}
         placeholder="Customer"
       />
-      <br />
-      <button onClick={handlePut}>Update</button>
+      <input
+        type="text"
+        value={sale.oilType}
+        onChange={(e) => setSale({ ...sale, oilType: e.target.value })}
+        placeholder="Oil Type"
+      />
+      <input
+        type="number"
+        value={sale.liters}
+        onChange={(e) => setSale({ ...sale, liters: e.target.value })}
+        placeholder="Liters"
+      />
+      <input
+        type="number"
+        value={sale.pricePerLiter}
+        onChange={(e) => setSale({ ...sale, pricePerLiter: e.target.value })}
+        placeholder="Price per liter"
+      />
+      <input
+        type="date"
+        value={sale.date}
+        onChange={(e) => setSale({ ...sale, date: e.target.value })}
+      />
 
+      <button onClick={handlePut}>Update</button>
       {msg && <p>{msg}</p>}
     </>
   );
 }
 
-export default Update;
+export default UpdateSale;

@@ -1,84 +1,71 @@
-// components/Add.jsx
+// src/components/AddSale.jsx
 import React, { useState } from "react";
 import axios from "axios";
 
-function Add() {
-  const [sale, setSale] = useState({
-    id: "",
-    product: "",
-    volume: "",
-    pricePerLiter: "",
-    customer: "",
-  });
+function AddSale() {
   const [msg, setMsg] = useState(null);
+  const [sale, setSale] = useState({
+    id: 0,
+    customer: '',
+    oilType: '',
+    liters: 0,
+    pricePerLiter: 0,
+    date: ''
+  });
 
   const handlePost = async () => {
-    // basic validation
-    if (!sale.id || !sale.product || !sale.volume || !sale.pricePerLiter) {
-      setMsg("Please fill id, product, volume and pricePerLiter");
-      return;
-    }
     try {
-      const payload = {
-        id: parseInt(sale.id),
-        product: sale.product,
-        volume: parseFloat(sale.volume),
-        pricePerLiter: parseFloat(sale.pricePerLiter),
-        customer: sale.customer || undefined,
-      };
-      const resp = await axios.post("http://localhost:3000/sales", payload);
-      setMsg(resp.data.msg || "Sale added");
-      setSale({ id: "", product: "", volume: "", pricePerLiter: "", customer: "" });
+      const resp = await axios.post("http://localhost:3000/sales", sale);
+      setMsg(resp.data.msg);
     } catch (e) {
-      console.error(e);
       setMsg(e.response?.data?.msg || e.message);
+      console.log(e);
     }
   };
 
   return (
     <>
       <h1>Add New Sale</h1>
-      <input
-        type="number"
+
+      <input type="number"
         value={sale.id}
-        onChange={(e) => setSale({ ...sale, id: e.target.value })}
+        onChange={(e) => setSale({ ...sale, id: parseInt(e.target.value) || 0 })}
         placeholder="Sale ID"
       />
-      <br />
-      <input
-        type="text"
-        value={sale.product}
-        onChange={(e) => setSale({ ...sale, product: e.target.value })}
-        placeholder="Product (e.g., Diesel)"
-      />
-      <br />
-      <input
-        type="number"
-        step="0.01"
-        value={sale.volume}
-        onChange={(e) => setSale({ ...sale, volume: e.target.value })}
-        placeholder="Volume (liters)"
-      />
-      <br />
-      <input
-        type="number"
-        step="0.01"
-        value={sale.pricePerLiter}
-        onChange={(e) => setSale({ ...sale, pricePerLiter: e.target.value })}
-        placeholder="Price per liter"
-      />
-      <br />
       <input
         type="text"
         value={sale.customer}
         onChange={(e) => setSale({ ...sale, customer: e.target.value })}
-        placeholder="Customer (optional)"
+        placeholder="Customer"
       />
-      <br />
+      <input
+        type="text"
+        value={sale.oilType}
+        onChange={(e) => setSale({ ...sale, oilType: e.target.value })}
+        placeholder="Oil Type (e.g., Diesel)"
+      />
+      <input
+        type="number"
+        value={sale.liters}
+        onChange={(e) => setSale({ ...sale, liters: parseFloat(e.target.value) || 0 })}
+        placeholder="Liters"
+      />
+      <input
+        type="number"
+        value={sale.pricePerLiter}
+        onChange={(e) => setSale({ ...sale, pricePerLiter: parseFloat(e.target.value) || 0 })}
+        placeholder="Price per liter"
+      />
+      <input
+        type="date"
+        value={sale.date}
+        onChange={(e) => setSale({ ...sale, date: e.target.value })}
+      />
+
       <button onClick={handlePost}>Add Sale</button>
       {msg && <p>{msg}</p>}
     </>
   );
 }
 
-export default Add;
+export default AddSale;
